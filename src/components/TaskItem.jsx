@@ -1,3 +1,4 @@
+// Task Item
 export default function TaskItem({ task, onDelete, onToggle }) {
   return (
     <div className="flex justify-between items-center bg-white border border-neutral-200 rounded-lg p-4 mb-2 hover:shadow-sm transition">

@@ -1,3 +1,4 @@
+// Task List
 import TaskItem from "./TaskItem";
 
 export default function TaskList({ tasks, onDelete, onToggle }) {
@@ -9,7 +10,7 @@ export default function TaskList({ tasks, onDelete, onToggle }) {
     );
 
   return (
-    <div className="mt-4">
+    <div className="mt-6 space-y-3">
       {tasks.map((task) => (
         <TaskItem 
           key={task.id} 
