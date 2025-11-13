@@ -1,26 +1,31 @@
 // Task Item
 export default function TaskItem({ task, onDelete, onToggle }) {
   return (
-    <div className="flex justify-between items-center bg-white border border-neutral-200 rounded-lg p-4 mb-2 hover:shadow-sm transition">
-      <input
-        type="checkbox"
-        checked={task.done}
-        onChange={() => onToggle(task.id)}
-        className="accent-primary w-4 h-4 cursor-pointer"
-      />
-      <span 
-        className={`${
-          task.done
-            ? "text-gray-400 line-through"
-            : "text-text"  
-        } transition`}
-      >
-        {task.title}
-      </span>
-
+    <div
+      className={`flex justify-between items-center p-3 border rounded ${
+        task.done ? "bg-green-50" : ""
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          checked={task.done}
+          onChange={() => onToggle(task.id)}
+        />
+        <div>
+          <p className={`${task.done ? "line-through text-gray-500" : ""}`}>
+            {task.title}
+          </p>
+          {task.deadline && (
+            <p className="text-sm text-gray-400">
+              Deadline: {task.deadline}
+            </p>
+          )}
+        </div>
+      </div>
       <button
         onClick={() => onDelete(task.id)}
-        className="text-neutral-400 hover:text-red-500 transition"
+        className="text-red-500 hover:text-red-700"
       >
         ✕
       </button>

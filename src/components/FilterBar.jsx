@@ -1,10 +1,4 @@
 export default function FilterBar({ filter, setFilter, search, setSearch }) {
-    const filters = [
-        { key: "all", label: "All" },
-        { key: "active", label: "Active" },
-        { key: "completed", label: "Completed" }
-    ];
-
     return (
         <div className="flex justify-between items-center mt-6">
             <div className="space-x-2">

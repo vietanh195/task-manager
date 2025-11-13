@@ -1,7 +1,10 @@
 // Task List
 import TaskItem from "./TaskItem";
+import { sortTasks } from "../utils/sortTasks";
 
-export default function TaskList({ tasks, onDelete, onToggle }) {
+export default function TaskList({ tasks, onDelete, onToggle, sortBy }) {
+  const sortedTasks = sortTasks(tasks, sortBy);
+  
   if (tasks.length === 0)
     return (
       <p className="text-neutral-400 text-center mt-8 italic">
@@ -10,8 +13,8 @@ export default function TaskList({ tasks, onDelete, onToggle }) {
     );
 
   return (
-    <div className="mt-6 space-y-3">
-      {tasks.map((task) => (
+    <div className="flex flex-col gap-2 mt-6 space-y-3">
+      {sortedTasks.map((task) => (
         <TaskItem 
           key={task.id} 
           task={task} 

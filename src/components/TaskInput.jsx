@@ -2,35 +2,45 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
-export default function TaskInput({ onAddTask }) {
-  const [task, setTask] = useState("");
+export default function TaskInput({ onAdd }) {
+  const [title, setTitle] = useState("");
+  const [deadline, setDeadline] = useState("");
 
-  const handleAdd = () => {
-    if (task.trim() === "") return;
-    onAddTask(task);
-    setTask("");
+  // const handleAdd = () => {
+  //   if (task.trim() === "") return;
+  //   onAdd(task);
+  //   setTask("");
+  // };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAdd(title, deadline);
+    setTitle("");
+    setDeadline("");
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleAdd();
+    if (e.key === "Enter") handleSubmit();
   };
 
   return (
-    <div className="flex gap-3 mt-6">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-4">
       <input
         type="text"
-        value={task}
-        onChange={(e) => setTask(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Add new task..."
-        className="flex-1 px-4 py-3 rounded-lg border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-neutral-400 transition"
+        placeholder="Task name..."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="flex-1 border rounded px-3 py-2"
       />
-      <button
-        onClick={handleAdd}
-        className="px-5 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition active:scale-[0.98]"
-      >
-        <Plus size={16} />
+      <input
+        type="date"
+        value={deadline}
+        onChange={(e) => setDeadline(e.target.value)}
+        className="border rounded px-3 py-2"
+      />
+      <button className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">
+        Add
       </button>
-    </div>
+    </form>
   );
 }
