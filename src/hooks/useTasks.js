@@ -1,36 +1,60 @@
 // useTasks
 import { useState, useEffect } from "react";
+import { sampleTasks } from "../utils/constants"; // Import sampleTasks để khởi tạo nếu không có data
 
 export function useTasks() {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("tasks");
-    return saved ? JSON.parse(saved) : [];
+    
+    // Nếu có data, parse ra. Nếu không, dùng sampleTasks và thêm thuộc tính createdAt/done
+    if (saved) {
+      return JSON.parse(saved);
+    } else {
+      // Chuẩn hóa data mẫu khi khởi tạo lần đầu
+      return sampleTasks.map(task => ({
+        ...task,
+        // Đảm bảo có createdAt nếu thiếu
+        createdAt: task.createdAt || new Date().toISOString(), 
+        // Đảm bảo có done nếu thiếu
+        done: task.status === 'done', 
+      }));
+    }
   });
 
-  // Lưu mỗi khi thay đổi
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (title, deadline) => {
-    if (!title.trim()) return;
+  // cho TaskInput/AddTaskForm
+  const addTask = (newTaskData) => {
+    if (!newTaskData.title || !newTaskData.title.trim()) return;
+
     const newTask = {
+      ...newTaskData,
       id: Date.now(),
-      title,
-      deadline,
-      done: false,
+      done: newTaskData.status === 'done' || false,
+      status: newTaskData.status || "todo",
       createdAt: new Date().toISOString(),
     };
-    setTasks([...tasks, newTask]);
+    setTasks(prevTasks => [...prevTasks, newTask]);
   };
 
+  // Toggle done/undone
   const toggleTask = (id) => {
-    setTasks(tasks.map(t => (t.id === id ? { ...t, done: !t.done } : t)));
+    setTasks(prevTasks => prevTasks.map(t => {
+      if (t.id === id) {
+        const newDoneState = !t.done;
+        // Cập nhật status dựa trên trạng thái done mới
+        const newStatus = newDoneState ? 'done' : 'todo';
+        return { ...t, done: newDoneState, status: newStatus };
+      }
+      return t;
+    }));
   };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id));
+    setTasks(prevTasks => prevTasks.filter(t => t.id !== id));
   };
 
-  return { tasks, addTask, toggleTask, deleteTask };
+  return { tasks, setTasks, addTask, toggleTask, deleteTask }; 
 }

@@ -1,19 +1,28 @@
+// FilterBar
+
 export default function FilterBar({ filter, setFilter, search, setSearch }) {
+    const filterOptions = [
+        { key: "all", label: "Tất cả" },
+        { key: "todo", label: "Cần Làm" },
+        { key: "in-progress", label: "Đang Làm" },
+        { key: "done", label: "Hoàn Thành" }
+    ];
+
     return (
-        <div className="flex justify-between items-center mt-6">
-            <div className="space-x-2">
-                {["all", "active", "completed"].map((f) => (
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+            <div className="flex flex-wrap gap-2 mb-3 sm:mb-0">
+                {filterOptions.map((f) => (
                     <button
-                        key={f}
-                        onClick={() => setFilter(f)}
-                        className={`px-3 py-1 rounded-full text-sm
+                        key={f.key}
+                        onClick={() => setFilter(f.key)}
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition active:scale-[0.98]
                             ${
-                                filter === f
-                                ? "bg-blue-500 text-white"
-                                : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"
+                                filter === f.key
+                                ? "bg-blue-600 text-white shadow-md"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                             }`}
                     >
-                        {f.charAt(0).toUpperCase() + f.slice(1)}
+                        {f.label}
                     </button>
                 ))}
             </div>
@@ -21,10 +30,9 @@ export default function FilterBar({ filter, setFilter, search, setSearch }) {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search tasks..."
-                className="px-4 py-2 rounded-lg border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-neutral-400 transition"
+                placeholder="Tìm kiếm công việc..."
+                className="w-full sm:w-64 px-4 py-2 rounded-lg border border-neutral-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-neutral-400 transition"
             />   
         </div>
     )
 };
-

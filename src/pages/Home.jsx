@@ -1,35 +1,58 @@
-// Home
-import { useState } from "react";
-import TaskInput from "../components/TaskInput";
-import TaskList from "../components/TaskList";
+// Home - Component chính của ứng dụng
+import React, { useState } from "react";
+import Header from "../components/Header";
+import Navbar from "../components/Navbar";
+import AddTaskForm from "../components/AddTaskForm";
+import Board from "../components/Board";
+import FilterBar from "../components/FilterBar";
 import { useTasks } from "../hooks/useTasks";
+// Không cần import TaskList, TaskItem, TaskInput nữa
 
 export default function Home() {
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks();
-  const [sortBy, setSortBy] = useState("createdAt");
+  // Lỗi đã khắc phục: Giải nén setTasks từ useTasks()
+  const { tasks, setTasks, addTask, toggleTask, deleteTask } = useTasks();
+  
+  // State cho Filter và Search
+  const [filter, setFilter] = useState("all"); 
+  const [search, setSearch] = useState(""); 
+  
+  // State Sorting (Giữ lại nếu bạn muốn dùng sorting cho mục đích debug/hiển thị)
+  const [sortBy, setSortBy] = useState("createdAt"); 
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Task Manager</h1>
-      <TaskInput onAdd={addTask} />
+    // Sử dụng Dark Mode class từ ThemeContext (đã được áp dụng ở App.js)
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <Navbar /> 
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <Header />
+        
+        <div className="max-w-6xl mx-auto mt-6">
+          
+          {/* Component thêm Task */}
+          <AddTaskForm onAddTask={addTask} />
+          
+          {/* Component Lọc và Tìm kiếm */}
+          {/* <FilterBar 
+            filter={filter} 
+            setFilter={setFilter} 
+            search={search}
+            setSearch={setSearch} 
+          /> */}
+          
+          {/* Sorting (Đã loại bỏ vì Board là hiển thị chính) */}
 
-      <div className="flex justify-end mb-2">
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="border px-2 py-1 rounded"
-        >
-          <option value="createdAt">Sort by Created</option>
-          <option value="deadline">Sort by Deadline</option>
-        </select>
+          {/* Component Drag & Drop Board */}
+          <Board 
+            tasks={tasks} 
+            setTasks={setTasks} // Truyền setTasks đã được giải nén
+            onDelete={deleteTask}
+            onToggle={toggleTask}
+            // Truyền filter và search xuống Board để Board tự lọc
+            filter={filter} 
+            search={search}
+          />
+        </div>
       </div>
-
-      <TaskList
-        tasks={tasks}
-        onToggle={toggleTask}
-        onDelete={deleteTask}
-        sortBy={sortBy}
-      />
     </div>
   );
 }
