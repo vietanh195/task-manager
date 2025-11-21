@@ -6,7 +6,7 @@ import AddTaskForm from "../components/AddTaskForm";
 import Board from "../components/Board";
 import FilterBar from "../components/FilterBar";
 import { useTasks } from "../hooks/useTasks";
-// Không cần import TaskList, TaskItem, TaskInput nữa
+import { motion } from "framer-motion";
 
 export default function Home() {
   // Lỗi đã khắc phục: Giải nén setTasks từ useTasks()
@@ -20,10 +20,16 @@ export default function Home() {
   const [sortBy, setSortBy] = useState("createdAt"); 
 
   return (
-    // Sử dụng Dark Mode class từ ThemeContext (đã được áp dụng ở App.js)
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <Navbar /> 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 text-gray-800 dark:text-gray-100 font-sans">
+      <Navbar />
+        
+        {/* Thêm hiệu ứng Fade In cho toàn bộ nội dung chính */}
+      <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="container mx-auto px-4 py-8 max-w-7xl"
+      >
         <Header />
         
         <div className="max-w-6xl mx-auto mt-6">
@@ -52,7 +58,7 @@ export default function Home() {
             search={search}
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

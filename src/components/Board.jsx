@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TaskCard from './TaskCard';
+import { AnimatePresence } from "framer-motion";
 
 export default function Board({ tasks, setTasks, onDelete, onToggle, filter, search }) {
     const statuses = ["todo", "in-progress", "done"];
@@ -60,41 +61,43 @@ export default function Board({ tasks, setTasks, onDelete, onToggle, filter, sea
             {statuses.map((status) => (
                 <div
                     key={status}
-                    // --- HTML5 DROPPABLE EVENTS ---
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, status)}
-                    // ------------------------------
-                    className={`bg-gray-100 dark:bg-gray-800 rounded-xl p-4 min-h-[400px] transition-colors duration-200 ${
-                        // Hiệu ứng khi đang kéo thả (tùy chọn)
-                        draggedTaskId ? 'border-2 border-dashed border-gray-300 dark:border-gray-600' : ''
+                    className={`bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 min-h-[400px] transition-colors duration-200 border border-transparent ${
+                        draggedTaskId ? 'border-dashed border-blue-300 dark:border-blue-700 bg-blue-50/30' : ''
                     }`}
                 >
-                    <h2 className="font-semibold capitalize mb-4 text-xl text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    <h2 className="font-semibold capitalize mb-4 text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center justify-between">
                         {status.replace("todo", "Cần Làm").replace("in-progress", "Đang Làm").replace("done", "Hoàn Thành")}
+                        <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-md text-xs">
+                             {filteredAndSearchedTasks.filter(t => t.status === status).length}
+                        </span>
                     </h2>
 
                     <div className="flex flex-col gap-3">
-                        {filteredAndSearchedTasks
-                            .filter((t) => t.status === status)
-                            .map((task) => (
-                                <div
-                                    key={task.id}
-                                    // --- HTML5 DRAGGABLE EVENTS ---
-                                    draggable={true} // Bật tính năng kéo
-                                    onDragStart={(e) => handleDragStart(e, task.id)}
-                                    // ------------------------------
-                                    className="cursor-grab active:cursor-grabbing transition-transform hover:scale-[1.02]"
-                                    style={{
-                                        opacity: draggedTaskId === task.id ? 0.5 : 1
-                                    }}
-                                >
-                                    <TaskCard
-                                        task={task}
-                                        onDelete={onDelete}
-                                        onToggle={onToggle}
-                                    />
-                                </div>
-                            ))}
+                        {/* Bọc danh sách bằng AnimatePresence */}
+                        <AnimatePresence mode='popLayout'> 
+                            {filteredAndSearchedTasks
+                                .filter((t) => t.status === status)
+                                .map((task) => (
+                                    <div
+                                        key={task.id}
+                                        draggable={true}
+                                        onDragStart={(e) => handleDragStart(e, task.id)}
+                                        // Chúng ta bỏ class wrapper cũ vì style đã nằm trong TaskCard (motion.div)
+                                        className="cursor-grab active:cursor-grabbing"
+                                        style={{
+                                            opacity: draggedTaskId === task.id ? 0.5 : 1
+                                        }}
+                                    >
+                                        <TaskCard
+                                            task={task}
+                                            onDelete={onDelete}
+                                            onToggle={onToggle}
+                                        />
+                                    </div>
+                                ))}
+                        </AnimatePresence>
                     </div>
 
                     {filteredAndSearchedTasks.filter((t) => t.status === status).length === 0 && (

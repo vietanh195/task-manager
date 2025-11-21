@@ -1,6 +1,7 @@
 // AddTaskForm
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 const AddTaskForm = ({ onAddTask }) => {
     const [formData, setFormData] = useState ({
@@ -36,27 +37,33 @@ const AddTaskForm = ({ onAddTask }) => {
         });
     }
 
+    const inputClass = "w-full border border-gray-200 dark:border-gray-600 rounded-lg p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-400 transition-colors duration-200";
+
     return (
-        <form
+        <motion.form
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             onSubmit={handleSubmit}
-            className="bg-white shadow rounded-xl p-4 mb-5 border border-gray-200"
+            className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 mb-5 border border-gray-200 dark:border-gray-700 transition-colors duration-300"
         >
-            <h2 className="font-semibold text-lg mb-3">➕ Thêm công việc mới</h2>
+            <h2 className="font-semibold text-lg mb-3 text-gray-800 dark:text-gray-200">➕ Thêm công việc mới</h2>
+            
             <input
                 type="text"
                 name="title"
-                placeholder="Work name..."
+                placeholder="Tên công việc..."
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className={inputClass}
             />
 
             <textarea
                 name="description"
-                placeholder="Description..."
+                placeholder="Mô tả chi tiết..."
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className={inputClass}
             ></textarea>
 
             <div className="flex gap-2 mb-2">
@@ -64,29 +71,29 @@ const AddTaskForm = ({ onAddTask }) => {
                     name="priority"
                     value={formData.priority}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-1/2"
+                    className={`${inputClass} w-1/2 cursor-pointer`}
                 >
-                    <option value='low'>Low</option>
-                    <option value='medium'>Medium</option>
-                    <option value='high'>High</option>
+                    <option value='low'>Thấp</option>
+                    <option value='medium'>Trung bình</option>
+                    <option value='high'>Cao</option>
                 </select>
 
                 <input
-                type="date"
-                name="deadline"
-                value={formData.deadline}
-                onChange={handleChange}
-                className="border rounded-lg p-2 w-1/2"
+                    type="date"
+                    name="deadline"
+                    value={formData.deadline}
+                    onChange={handleChange}
+                    className={`${inputClass} w-1/2 cursor-pointer`}
                 />
             </div>
 
             <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full font-medium transition-transform active:scale-95 shadow-md hover:shadow-lg"
             >
-                Add Task
+                Thêm Task
             </button>
-        </form>
+        </motion.form>
     );
 };
 
