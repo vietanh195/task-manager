@@ -1,6 +1,6 @@
 // useTasks
 import { useState, useEffect } from "react";
-import { sampleTasks } from "../utils/constants"; // Import sampleTasks để khởi tạo nếu không có data
+// import { sampleTasks } from "../utils/constants";
 
 export function useTasks() {
   const [tasks, setTasks] = useState(() => {
@@ -10,14 +10,15 @@ export function useTasks() {
     if (saved) {
       return JSON.parse(saved);
     } else {
-      // Chuẩn hóa data mẫu khi khởi tạo lần đầu
-      return sampleTasks.map(task => ({
-        ...task,
-        // Đảm bảo có createdAt nếu thiếu
-        createdAt: task.createdAt || new Date().toISOString(), 
-        // Đảm bảo có done nếu thiếu
-        done: task.status === 'done', 
-      }));
+      // // Chuẩn hóa data mẫu khi khởi tạo lần đầu
+      // return sampleTasks.map(task => ({
+      //   ...task,
+      //   // Đảm bảo có createdAt nếu thiếu
+      //   createdAt: task.createdAt || new Date().toISOString(), 
+      //   // Đảm bảo có done nếu thiếu
+      //   done: task.status === 'done', 
+      // }));
+      return [];
     }
   });
 
@@ -43,10 +44,23 @@ export function useTasks() {
   const toggleTask = (id) => {
     setTasks(prevTasks => prevTasks.map(t => {
       if (t.id === id) {
-        const newDoneState = !t.done;
+        let newStatus; 
+
+        if (t.status === 'todo') {
+          newStatus = 'in-progress';
+        } else if (t.status === 'in-progress') {
+          newStatus = 'done';
+        } else {
+          newStatus = 'todo';
+        }
+
+        const isDone = newStatus === 'done';
+        return { ...t, status: newStatus, done: isDone };
+
+        // const newDoneState = !t.done;
         // Cập nhật status dựa trên trạng thái done mới
-        const newStatus = newDoneState ? 'done' : 'todo';
-        return { ...t, done: newDoneState, status: newStatus };
+        // const newStatus = newDoneState ? 'done' : 'todo';
+        // return { ...t, done: newDoneState, status: newStatus };
       }
       return t;
     }));
