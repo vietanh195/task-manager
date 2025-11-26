@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import AddTaskForm from "../components/AddTaskForm";
 import Board from "../components/Board";
+import StatsDashboard from "../components/StatsDashboard";
 import FilterBar from "../components/FilterBar";
 import { useTasks } from "../hooks/useTasks";
 import { motion } from "framer-motion";
@@ -34,7 +35,8 @@ export default function Home() {
         
         <div className="max-w-6xl mx-auto mt-6">
           
-          {/* Component thêm Task */}
+          <StatsDashboard tasks={tasks} />
+
           <AddTaskForm onAddTask={addTask} />
           
           {/* Component Lọc và Tìm kiếm */}
